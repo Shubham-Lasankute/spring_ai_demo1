@@ -1,0 +1,6 @@
+#NOTE: This is a Maven Resolver internal implementation file, its format can be changed without prior notice.
+#Wed Jul 24 16:21:33 IST 2024
+@default-spring-milestones-https\://repo.spring.io/milestone/.lastUpdated=1721818291853
+https\://repo.maven.apache.org/maven2/.error=
+https\://repo.maven.apache.org/maven2/.lastUpdated=1721818293107
+https\://repo.spring.io/milestone/.error=Could not transfer artifact org.springframework.ai\:spring-ai-azure-openai-spring-boot-starter\:jar\:javadoc\:1.0.0-M1 from/to spring-milestones (https\://repo.spring.io/milestone)\: No such host is known (repo.spring.io)

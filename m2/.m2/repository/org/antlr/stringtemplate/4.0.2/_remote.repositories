@@ -1,0 +1,5 @@
+#NOTE: This is a Maven Resolver internal implementation file, its format can be changed without prior notice.
+#Wed Jul 24 16:14:27 IST 2024
+stringtemplate-4.0.2-sources.jar>central=
+stringtemplate-4.0.2.jar>central=
+stringtemplate-4.0.2.pom>central=
