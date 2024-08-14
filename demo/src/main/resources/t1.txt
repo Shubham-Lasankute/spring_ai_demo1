@@ -1,0 +1,102 @@
+import os
+from openai import AzureOpenAI
+
+client = AzureOpenAI(
+    api_key=os.getenv("AZURE_OPENAI_API_KEY"),
+    api_version="2024-02-01",
+    azure_endpoint="https://texttotext.openai.azure.com/"
+)
+
+# This will correspond to the custom name you chose for your deployment when you deployed a model.
+# Use a gpt-35-turbo-instruct deployment.
+deployment_name = "texttotext"
+
+# Send a completion call to generate an answer
+prompt = "Below is an extract from the annual financial report of a company. Extract key financial number (if present), key internal risk factors, and key external risk factors.\n\n# Start of Report\nRevenue increased $7.5 billion or 16%. Commercial products and cloud services revenue increased $4.0 billion or 13%. O365 Commercial revenue grew 22% driven by seat growth of 17% and higher revenue per user. Office Consumer products and cloud services revenue increased $474 million or 10% driven by Consumer subscription revenue, on a strong prior year comparable that benefited from transactional strength in Japan. Gross margin increased $6.5 billion or 18% driven by the change in estimated useful lives of our server and network equipment. \nOur competitors range in size from diversified global companies with significant research and development resources to small, specialized firms whose narrower product lines may let them be more effective in deploying technical, marketing, and financial resources. Barriers to entry in many of our businesses are low and many of the areas in which we compete evolve rapidly with changing and disruptive technologies, shifting user needs, and frequent introductions of new products and services. Our ability to remain competitive depends on our success in making innovative products, devices, and services that appeal to businesses and consumers.\n# End of Report"
+response = client.completions.create(
+    model=deployment_name,
+    prompt=prompt,
+    temperature=0.3,
+    max_tokens=350,
+    top_p=1,
+    frequency_penalty=0,
+    presence_penalty=0,
+    stop=None
+)
+
+print(prompt + response.choices[0].text)
+
+
+
+//for java /////////////////////////
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.RestTemplate;
+
+@RestController
+public class OpenAIController {
+
+    @Autowired
+    private RestTemplate restTemplate;
+
+    private static final String AZURE_OPENAI_API_KEY = "<your_api_key>";
+    private static final String AZURE_ENDPOINT = "https://texttotext.openai.azure.com/";
+    private static final String DEPLOYMENT_NAME = "texttotext";
+
+    @PostMapping("/generateResponse")
+    public String generateResponse(@RequestBody String prompt) {
+        String url = AZURE_ENDPOINT + "completions/create";
+        
+        AzureOpenAIRequest request = new AzureOpenAIRequest(prompt);
+        
+        AzureOpenAIResponse response = restTemplate.postForObject(url, request, AzureOpenAIResponse.class);
+
+        if (response != null && response.getChoices() != null && response.getChoices().length > 0) {
+            return prompt + response.getChoices()[0].getText();
+        } else {
+            return "Error: No response from Azure OpenAI";
+        }
+    }
+
+    private static class AzureOpenAIRequest {
+        private String prompt;
+
+        public AzureOpenAIRequest(String prompt) {
+            this.prompt = prompt;
+        }
+
+        public String getPrompt() {
+            return prompt;
+        }
+
+        public void setPrompt(String prompt) {
+            this.prompt = prompt;
+        }
+    }
+
+    private static class AzureOpenAIResponse {
+        private Choice[] choices;
+
+        public Choice[] getChoices() {
+            return choices;
+        }
+
+        public void setChoices(Choice[] choices) {
+            this.choices = choices;
+        }
+    }
+
+    private static class Choice {
+        private String text;
+
+        public String getText() {
+            return text;
+        }
+
+        public void setText(String text) {
+            this.text = text;
+        }
+    }
+}
